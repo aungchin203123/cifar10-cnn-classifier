@@ -1,4 +1,4 @@
-﻿import os
+import os
 import io
 import glob
 import numpy as np
@@ -7,24 +7,24 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from PIL import Image
 
-# ── Safe Keras import ──────────────────────────────────────────────────────────
+# -- Safe Keras import ----------------------------------------------------------
 import keras
 
-# ── Page config ────────────────────────────────────────────────────────────────
+# -- Page config ----------------------------------------------------------------
 st.set_page_config(
     page_title="CIFAR-10 Classifier",
-    page_icon="🔭",
+    page_icon="??",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 CLASS_NAMES = [
-    "✈️ Airplane", "🚗 Automobile", "🐦 Bird", "🐱 Cat", "🦌 Deer",
-    "🐕 Dog", "🐸 Frog", "🐴 Horse", "🚢 Ship", "🚛 Truck",
+    "?? Airplane", "?? Automobile", "?? Bird", "?? Cat", "?? Deer",
+    "?? Dog", "?? Frog", "?? Horse", "?? Ship", "?? Truck",
 ]
 CLASS_KEYS = ["airplane","automobile","bird","cat","deer","dog","frog","horse","ship","truck"]
 CLASS_COLORS = ["#4361EE","#F72585","#7209B7","#3A0CA3","#4CC9F0","#4895EF","#560BAD","#B5179E","#06D6A0","#FFB703"]
-MODEL_PATH = r"C:\Users\DRC\Downloads\Cifar-10--CNN-using-keras-main\Cifar-10--CNN-using-keras-main\cifar10_model_88.keras"
+MODEL_PATH = "cifar10_model_88.keras"
 
 st.markdown("""
 <style>
@@ -50,7 +50,7 @@ h1,h2,h3{font-family:'Syne',sans-serif!important;font-weight:800!important;}
 """, unsafe_allow_html=True)
 
 
-# ── Model loader with quantization_config patch ────────────────────────────────
+# -- Model loader with quantization_config patch --------------------------------
 @st.cache_resource(show_spinner=False)
 def load_my_model(path: str):
     # Auto-find model file
@@ -110,58 +110,58 @@ def bar_chart(probs):
     return fig
 
 
-# ── Sidebar ────────────────────────────────────────────────────────────────────
+# -- Sidebar --------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("## 🔭 CIFAR-10\n### CNN Classifier")
+    st.markdown("## ?? CIFAR-10\n### CNN Classifier")
     st.markdown("---")
     model_file = st.text_input("Model path (.keras / .h5)", value=MODEL_PATH)
     load_btn = st.button("Load / Reload Model")
     st.markdown("---")
     st.markdown("**Classes**")
     for name, color in zip(CLASS_NAMES, CLASS_COLORS):
-        st.markdown(f'<span style="color:{color};font-size:0.9rem;">● {name}</span>', unsafe_allow_html=True)
+        st.markdown(f'<span style="color:{color};font-size:0.9rem;">? {name}</span>', unsafe_allow_html=True)
     st.markdown("---")
     st.caption("Built with Streamlit + Keras 3")
 
 if load_btn:
     st.cache_resource.clear()
 
-with st.spinner("Loading model…"):
+with st.spinner("Loading model�"):
     model, model_path_used = load_my_model(model_file)
 
-# ── Header ─────────────────────────────────────────────────────────────────────
+# -- Header ---------------------------------------------------------------------
 st.markdown("# CIFAR-10 Image Classifier")
-st.markdown("VGG-style CNN · 10 classes · 32×32 input")
+st.markdown("VGG-style CNN � 10 classes � 32�32 input")
 
 c1, c2, c3, c4 = st.columns(4)
 if model is not None:
-    c1.markdown('<div class="metric-tile"><div class="metric-val">✅</div><div class="metric-lbl">Model loaded</div></div>', unsafe_allow_html=True)
+    c1.markdown('<div class="metric-tile"><div class="metric-val">?</div><div class="metric-lbl">Model loaded</div></div>', unsafe_allow_html=True)
     c2.markdown(f'<div class="metric-tile"><div class="metric-val">{len(model.layers)}</div><div class="metric-lbl">Layers</div></div>', unsafe_allow_html=True)
     c3.markdown(f'<div class="metric-tile"><div class="metric-val">{model.count_params()/1e6:.2f}M</div><div class="metric-lbl">Parameters</div></div>', unsafe_allow_html=True)
     c4.markdown('<div class="metric-tile"><div class="metric-val">88%</div><div class="metric-lbl">Val Accuracy</div></div>', unsafe_allow_html=True)
     if model_path_used and model_path_used != model_file:
         st.info(f"Auto-found model at: `{model_path_used}`")
 else:
-    st.error("❌ Model not found. Place your `.keras` file in the same folder as `app.py` and click **Load / Reload Model**.")
+    st.error("? Model not found. Place your `.keras` file in the same folder as `app.py` and click **Load / Reload Model**.")
 
 st.markdown("---")
 
-tab1, tab2, tab3, tab4 = st.tabs(["🔍 Single Predict","📦 Batch Predict","🧪 Explore Dataset","🏗️ Architecture"])
+tab1, tab2, tab3, tab4 = st.tabs(["?? Single Predict","?? Batch Predict","?? Explore Dataset","??? Architecture"])
 
-# ── Single Predict ─────────────────────────────────────────────────────────────
+# -- Single Predict -------------------------------------------------------------
 with tab1:
     col_l, col_r = st.columns(2, gap="large")
     with col_l:
         st.markdown("### Upload an Image")
-        up = st.file_uploader("PNG / JPG / WEBP — any size", type=["png","jpg","jpeg","webp"], key="single")
+        up = st.file_uploader("PNG / JPG / WEBP � any size", type=["png","jpg","jpeg","webp"], key="single")
         if up:
             pil = Image.open(up)
             st.image(pil, caption="Original", use_container_width=True)
-            st.image(pil.resize((32,32),Image.NEAREST).resize((128,128),Image.NEAREST), caption="As model sees it (32×32)", width=128)
+            st.image(pil.resize((32,32),Image.NEAREST).resize((128,128),Image.NEAREST), caption="As model sees it (32�32)", width=128)
     with col_r:
         st.markdown("### Prediction")
         if up and model is not None:
-            with st.spinner("Classifying…"):
+            with st.spinner("Classifying�"):
                 probs, idx = do_predict(model, preprocess(pil))
             st.markdown(f'<div class="pred-badge">{CLASS_NAMES[idx]}</div>', unsafe_allow_html=True)
             st.markdown(f"**Confidence:** `{probs[idx]*100:.2f}%`")
@@ -173,7 +173,7 @@ with tab1:
         else:
             st.info("Upload an image on the left.")
 
-# ── Batch Predict ──────────────────────────────────────────────────────────────
+# -- Batch Predict --------------------------------------------------------------
 with tab2:
     st.markdown("### Batch Prediction")
     files = st.file_uploader("Upload images", type=["png","jpg","jpeg","webp"], accept_multiple_files=True, key="batch")
@@ -191,16 +191,16 @@ with tab2:
             prog.empty()
             df = pd.DataFrame(results)
             st.dataframe(df, use_container_width=True)
-            st.download_button("⬇️ Download CSV", df.to_csv(index=False).encode(), "predictions.csv", "text/csv")
+            st.download_button("?? Download CSV", df.to_csv(index=False).encode(), "predictions.csv", "text/csv")
     elif model is None:
         st.info("Load a model first.")
 
-# ── Explore Dataset ────────────────────────────────────────────────────────────
+# -- Explore Dataset ------------------------------------------------------------
 with tab3:
     st.markdown("### Explore CIFAR-10 Test Set")
     if model is not None:
-        if st.button("🎲 Sample 50 random test images"):
-            with st.spinner("Loading CIFAR-10 & predicting…"):
+        if st.button("?? Sample 50 random test images"):
+            with st.spinner("Loading CIFAR-10 & predicting�"):
                 (_, _), (x_test, y_test) = keras.datasets.cifar10.load_data()
                 x_test = x_test.astype(np.float32) / 255.0
                 si = np.random.choice(len(x_test), 50, replace=False)
@@ -222,7 +222,7 @@ with tab3:
     else:
         st.info("Load a model first.")
 
-# ── Architecture ───────────────────────────────────────────────────────────────
+# -- Architecture ---------------------------------------------------------------
 with tab4:
     st.markdown("### Model Architecture")
     if model is not None:
@@ -230,7 +230,7 @@ with tab4:
         model.summary(print_fn=lambda x: buf.write(x+"\n"))
         st.code(buf.getvalue(), language="text")
         rows = [{"Layer":l.name,"Type":l.__class__.__name__,
-                 "Output Shape":str(getattr(l,"output_shape","–")),
+                 "Output Shape":str(getattr(l,"output_shape","�")),
                  "Params":f"{l.count_params():,}"} for l in model.layers]
         st.dataframe(pd.DataFrame(rows), use_container_width=True, height=400)
     else:
@@ -240,13 +240,13 @@ with tab4:
 #### Design Rationale
 | Block | Filters | Purpose |
 |---|---|---|
-| Block 1 | 32→32 | Edge / texture detection |
-| Block 2 | 64→64 | Pattern recognition |
-| Block 3 | 128→128 | Semantic features |
-| Dense head | 512→10 | Classification |
+| Block 1 | 32?32 | Edge / texture detection |
+| Block 2 | 64?64 | Pattern recognition |
+| Block 3 | 128?128 | Semantic features |
+| Dense head | 512?10 | Classification |
 
-- **Batch Norm** → faster convergence  
-- **MaxPooling** → translation invariance  
-- **Dropout** 0.3→0.4→0.5 → progressive regularisation  
-- **tf.data AUTOTUNE** → GPU/CPU pipeline overlap  
+- **Batch Norm** ? faster convergence  
+- **MaxPooling** ? translation invariance  
+- **Dropout** 0.3?0.4?0.5 ? progressive regularisation  
+- **tf.data AUTOTUNE** ? GPU/CPU pipeline overlap  
 """)
