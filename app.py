@@ -139,7 +139,7 @@ CLASSES = [
     "🐶 Dog", "🐸 Frog", "🐴 Horse", "🚢 Ship", "🚛 Truck",
 ]
 CLASS_NAMES = [c.split(" ", 1)[1] for c in CLASSES]   # plain names for model
-MODEL_PATH = "improved_cifar10_cnn.keras"
+model_path = "cifar10_model_88.keras"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Model loader (cached)
